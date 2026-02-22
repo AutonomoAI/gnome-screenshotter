@@ -1,1 +1,1 @@
-./target/debug/gnome-screenshotter
+./target/fast-dev/gnome-screenshotter

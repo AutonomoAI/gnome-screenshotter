@@ -12,3 +12,25 @@ image = { version = "0.25.9", features = ["avif", "avif-native", "png", "jpeg", 
 lexopt = "0.3"
 thiserror = "2.0.18"
 tokio = { version = "1.49.0", features = ["macros", "rt-multi-thread"] }
+
+[profile.release]
+# Optimized for runtime performance
+opt-level = 3              # Maximum optimization
+#debug = false              # No debug symbols
+debug = true
+lto = "thin"               # Thin LTO (good balance of speed vs size)
+codegen-units = 16         # Reduce parallelism for better optimization
+#strip = true               # Strip symbols (smaller binary)
+split-debuginfo = "packed" # Smaller debug info if needed
+
+
+# ============================================================================
+# FASTER BUILDS: Use this profile for iterative development
+# Run with: cargo build --profile fast-dev
+# ============================================================================
+
+[profile.fast-dev]
+inherits = "dev"
+opt-level = 0              # No optimization (fastest)
+codegen-units = 512        # Maximum parallelism
+

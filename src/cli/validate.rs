@@ -22,8 +22,21 @@ pub fn normalize(raw: RawArgs) -> Result<ParseOutcome, String> {
         return Ok(ParseOutcome::ShowVersion);
     }
 
+    // No command and no flags: show help
+    if raw.command.is_none()
+        && !raw.webp
+        && !raw.png
+        && !raw.jpg
+        && raw.naming.is_none()
+        && raw.output.is_none()
+    {
+        return Ok(ParseOutcome::ShowHelp);
+    }
+
     // Require exactly one command
-    let cmd_str = raw.command.ok_or_else(|| "Missing command: use 'full' or 'box'".to_string())?;
+    let cmd_str = raw
+        .command
+        .ok_or_else(|| "Missing command: use 'full' or 'box'".to_string())?;
     let command = match cmd_str.as_str() {
         "full" => Command::Full,
         "box" => Command::Box,
@@ -34,7 +47,9 @@ pub fn normalize(raw: RawArgs) -> Result<ParseOutcome, String> {
     let format_flags = [raw.webp, raw.png, raw.jpg];
     let format_flag_count = format_flags.iter().filter(|&&b| b).count();
     if format_flag_count > 1 {
-        return Err("Conflicting format flags: use at most one of --webp, --png, --jpg".to_string());
+        return Err(
+            "Conflicting format flags: use at most one of --webp, --png, --jpg".to_string(),
+        );
     }
 
     // Naming mode parsing
@@ -42,7 +57,12 @@ pub fn normalize(raw: RawArgs) -> Result<ParseOutcome, String> {
         None | Some("timestamp") => NamingMode::Timestamp,
         Some("incremental") => NamingMode::Incremental,
         Some("hash") => NamingMode::Hash,
-        Some(other) => return Err(format!("Invalid --naming mode: '{}'. Use: timestamp, incremental, hash", other)),
+        Some(other) => {
+            return Err(format!(
+                "Invalid --naming mode: '{}'. Use: timestamp, incremental, hash",
+                other
+            ))
+        }
     };
 
     // Determine output path and format
@@ -50,10 +70,16 @@ pub fn normalize(raw: RawArgs) -> Result<ParseOutcome, String> {
         Some(path_str) => {
             // With -o: format flags are illegal; infer from extension
             if format_flag_count > 0 {
-                return Err("Format flags (--webp, --png, --jpg) cannot be used with --output".to_string());
+                return Err(
+                    "Format flags (--webp, --png, --jpg) cannot be used with --output".to_string(),
+                );
             }
             let path = std::path::PathBuf::from(path_str);
-            let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("").to_ascii_lowercase();
+            let ext = path
+                .extension()
+                .and_then(|e| e.to_str())
+                .unwrap_or("")
+                .to_ascii_lowercase();
             let inferred = match ext.as_str() {
                 "png" => Format::Png,
                 "jpg" | "jpeg" => Format::Jpg,

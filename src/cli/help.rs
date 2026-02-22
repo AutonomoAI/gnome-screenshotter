@@ -12,7 +12,7 @@ COMMANDS:
 GLOBAL OPTIONS:
   -o, --output <PATH>
           Save to an exact file path.
-          Format is inferred from the file extension (.webp, .png, .jpg, .jpeg, .qoi, etc. if supported).
+          Format is inferred from the file extension (.webp, .png, .jpg, .jpeg, and .avif).
           When --output is used, format flags like --webp/--png/--jpg are not allowed.
           If the file already exists, a new file will be added with the current timestamp before the extension.
 
@@ -41,10 +41,10 @@ GLOBAL OPTIONS:
       --naming <MODE> | --naming
           Auto-generated file naming strategy when --output is not provided.
           Possible values:
-            datetime      "Screenshot - 2026-02-12 11_22_33.webp" (default)
+            timestamp      "Screenshot - 2026-02-12 11_22_33.webp" (default)
             incremental   "Screenshot - 0001.webp", "Screenshot - 0002.webp", ...
             hash          "Screenshot - a1b2c3d4.webp" (short content hash)
-          [default: datetime]
+          [default: timestamp]
 
       --dir <DIR>
           Output directory for auto-generated filenames (when --output is not provided).
@@ -70,10 +70,10 @@ FORMAT SHORTCUTS (when NOT using --output):
     --jpg    Save as .jpg
 
 NAMING EXAMPLES (auto-generated names):
-  Default (datetime):
+  Default (timestamp):
     Screenshot - 2026-02-12 11_22_33.webp
 
-  Custom prefix + datetime:
+  Custom prefix + timestamp:
     --prefix "RimWorld"
     => RimWorld - 2026-02-12 11_22_33.webp
 

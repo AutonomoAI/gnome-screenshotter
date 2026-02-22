@@ -14,6 +14,7 @@ pub enum Format {
     Webp,
     Png,
     Jpg,
+    Avif,
 }
 
 /// Auto-naming strategy when no output path given.

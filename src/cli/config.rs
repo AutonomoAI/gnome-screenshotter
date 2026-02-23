@@ -11,9 +11,10 @@ pub enum Command {
 /// Output image format.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Format {
-    Webp,
-    Png,
-    Jpg,
+    AVIF,
+    JPEG,
+    PNG,
+    WEBP,
 }
 
 /// Auto-naming strategy when no output path given.

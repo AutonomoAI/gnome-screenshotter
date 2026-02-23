@@ -81,10 +81,10 @@ pub fn normalize(raw: RawArgs) -> Result<ParseOutcome, String> {
                 .unwrap_or("")
                 .to_ascii_lowercase();
             let inferred = match ext.as_str() {
-                "png" => Format::Png,
-                "jpg" | "jpeg" => Format::Jpg,
-                "webp" => Format::Webp,
-                _ => Format::Webp, // default when extension unrecognized
+                'avif'         => Format::AVIF,
+                "png"          => Format::PNG,
+                "jpg" | "jpeg" => Format::JPEG,
+                "webp"         => Format::WEBP,
             };
             (Some(path), inferred)
         }

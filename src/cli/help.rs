@@ -68,6 +68,7 @@ FORMAT SHORTCUTS (when NOT using --output):
     --webp   Save as .webp (default)
     --png    Save as .png
     --jpg    Save as .jpg
+    --avif   Save as .avif
 
 NAMING EXAMPLES (auto-generated names):
   Default (timestamp):

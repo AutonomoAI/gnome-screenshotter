@@ -27,6 +27,7 @@ pub fn normalize(raw: RawArgs) -> Result<ParseOutcome, String> {
         && !raw.webp
         && !raw.png
         && !raw.jpg
+        && !raw.avif
         && raw.naming.is_none()
         && raw.output.is_none()
     {
@@ -67,35 +68,38 @@ pub fn normalize(raw: RawArgs) -> Result<ParseOutcome, String> {
 
     // Determine output path and format
     let (output, format) = match raw.output {
-        Some(path_str) => {
+        Some(filepath_str) => {
             // With -o: format flags are illegal; infer from extension
             if format_flag_count > 0 {
                 return Err(
-                    "Format flags (--webp, --png, --jpg) cannot be used with --output".to_string(),
+                    "Format flags (--webp, --png, --jpg, --avif) cannot be used with --output".to_string(),
                 );
             }
-            let path = std::path::PathBuf::from(path_str);
-            let ext = path
+            let filepath = std::path::PathBuf::from(filepath_str);
+            let ext = filepath
                 .extension()
                 .and_then(|e| e.to_str())
                 .unwrap_or("")
                 .to_ascii_lowercase();
             let inferred = match ext.as_str() {
-                'avif'         => Format::AVIF,
+                "avif"         => Format::AVIF,
                 "png"          => Format::PNG,
                 "jpg" | "jpeg" => Format::JPEG,
                 "webp"         => Format::WEBP,
+                _              => return Err(format!("unsupported image extension: {ext:?} in '{}'", filepath.display()).into())
             };
-            (Some(path), inferred)
+            (Some(filepath), inferred)
         }
         None => {
             // Without -o: use format flag or default WebP
             let fmt = if raw.png {
-                Format::Png
+                Format::PNG
             } else if raw.jpg {
-                Format::Jpg
+                Format::JPEG
+            } else if raw.avif {
+                Format::AVIF
             } else {
-                Format::Webp // --webp or default
+                Format::WEBP // --webp or default
             };
             (None, fmt)
         }

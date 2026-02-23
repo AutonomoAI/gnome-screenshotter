@@ -11,6 +11,7 @@ pub struct RawArgs {
     pub webp: bool,
     pub png: bool,
     pub jpg: bool,
+    pub avif: bool,
     pub naming: Option<String>,
     pub help: bool,
     pub version: bool,
@@ -32,6 +33,7 @@ pub fn scan(args: &[String]) -> Result<RawArgs, String> {
             Arg::Long("webp") => raw.webp = true,
             Arg::Long("png") => raw.png = true,
             Arg::Long("jpg") => raw.jpg = true,
+            Arg::Long("avif") => raw.avif = true,
             Arg::Long("naming") => {
                 let val = parser.value().map_err(|e| e.to_string())?;
                 raw.naming = Some(val.string().map_err(|e| e.to_string())?);
